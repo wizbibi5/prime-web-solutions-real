@@ -25,10 +25,7 @@ export function Navigation() {
   const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -36,14 +33,11 @@ export function Navigation() {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Account for fixed header
+      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       setMobileMenuOpen(false);
     }
   };
@@ -68,7 +62,8 @@ export function Navigation() {
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          {/* ✅ Reduced mobile height */}
+          <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Brand Name */}
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -139,24 +134,21 @@ export function Navigation() {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Hamburger Menu */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle menu"
               >
-                {mobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Menu Overlay - Enhanced with animations */}
+      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <motion.div
@@ -166,12 +158,13 @@ export function Navigation() {
             className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
+          {/* ✅ Reduced top and padding */}
           <motion.div
             initial={{ x: '100%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="absolute top-20 right-0 w-72 bg-white/95 backdrop-blur-md shadow-2xl rounded-bl-3xl p-8 space-y-2"
+            className="absolute top-16 right-0 w-72 bg-white/95 backdrop-blur-md shadow-2xl rounded-bl-3xl p-4 space-y-2"
           >
             {navLinks.map((link, index) => (
               <motion.button
