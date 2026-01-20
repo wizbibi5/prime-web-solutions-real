@@ -5,21 +5,23 @@ import { ReactNode, ComponentType } from 'react'
 
 // Utility for safely loading browser-only components
 // This prevents SSR crashes when components use window, navigator, localStorage, etc.
-export function createClientSafeComponent<P = {}>(
+export function createClientSafeComponent<P extends object = object>(
   loader: () => Promise<{ default: ComponentType<P> }>,
   fallback?: ReactNode
 ) {
   return dynamic(loader, {
     ssr: false, // Disable server-side rendering
     loading: () => (
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        minHeight: '100px',
-        color: '#6b7280',
-        fontSize: '0.875rem'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100px',
+          color: '#6b7280',
+          fontSize: '0.875rem',
+        }}
+      >
         {fallback || 'Loading...'}
       </div>
     ),
@@ -30,17 +32,19 @@ export function createClientSafeComponent<P = {}>(
 export const BrowserOnlyWrapper = ({ children }: { children: ReactNode }) => {
   // This component only renders on the client side
   // Useful for wrapping components that use browser APIs
-  
+
   if (typeof window === 'undefined') {
     return (
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        minHeight: '100px',
-        color: '#6b7280',
-        fontSize: '0.875rem'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100px',
+          color: '#6b7280',
+          fontSize: '0.875rem',
+        }}
+      >
         Loading interactive content...
       </div>
     )
@@ -85,7 +89,7 @@ export const browserAPI = {
       } catch {
         return false
       }
-    }
+    },
   },
 
   // Safe sessionStorage access
@@ -106,7 +110,7 @@ export const browserAPI = {
       } catch {
         return false
       }
-    }
+    },
   },
 
   // Safe navigator access
@@ -122,9 +126,10 @@ export const browserAPI = {
     innerHeight: typeof window !== 'undefined' ? window.innerHeight : 768,
     location: {
       href: typeof window !== 'undefined' ? window.location?.href : '',
-      pathname: typeof window !== 'undefined' ? window.location?.pathname : '/',
-    }
-  }
+      pathname:
+        typeof window !== 'undefined' ? window.location?.pathname : '/',
+    },
+  },
 }
 
 export default BrowserOnlyWrapper
